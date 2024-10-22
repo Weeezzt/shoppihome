@@ -26,8 +26,19 @@ interface Property {
   energyRating: string;
 }
 
-const Listings = () => {
+interface ListingsProps {
+  filters: {
+    searchTerm: string;
+    minRooms: number;
+    maxPrice: number;
+    minArea: number;
+    propertyType: string;
+  };
+}
+
+const Listings: React.FC<ListingsProps> = ({ filters }) => {
   const [properties, setProperties] = useState<Property[]>([]);
+  const [filteredProperties, setFilteredProperties] = useState<Property[]>([]);
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -42,11 +53,33 @@ const Listings = () => {
 
     fetchProperties();
   }, []);
+
+  // Apply filters
+  useEffect(() => {
+    const filtered = properties.filter((property) => {
+      const matchesSearchTerm =
+        property.address.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
+        property.city.toLowerCase().includes(filters.searchTerm.toLowerCase());
+
+      const matchesRooms = property.rooms >= filters.minRooms;
+      const matchesPrice = property.price <= filters.maxPrice;
+      const matchesArea = property.squareMeters >= filters.minArea;
+      const matchesType =
+        filters.propertyType === "Alla typer" || property.type === filters.propertyType;
+
+      return matchesSearchTerm && matchesRooms && matchesPrice && matchesArea && matchesType;
+    });
+
+    setFilteredProperties(filtered);
+  }, [filters, properties]);
+
   return (
     <div className="flex flex-col space-y-6 w-full ml-24">
-      {properties.map((property) => (
-        <ListingCard key={property.id} property={property} />
-      ))}
+      {filteredProperties.length > 0 ? (
+        filteredProperties.map((property) => <ListingCard key={property.id} property={property} />)
+      ) : (
+        <p>No properties match the current filters.</p>
+      )}
     </div>
   );
 };
