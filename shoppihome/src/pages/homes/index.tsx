@@ -5,6 +5,7 @@ import SecondarySearchComp from "@/components/searchboxComps/SecondarySearchComp
 import Header from "@/components/Header";
 import { CarouselDemo } from "@/components/shadcnComps/CarouselDemo";
 import Listings from "@/components/listings/Listings";
+import Collapsible from "@/components/searchboxComps/Collapsible";
 
 // Define a type for the filters
 interface SearchFilters {
@@ -37,7 +38,9 @@ export default function page() {
       <Header />
       <main className="flex-grow p-6 bg-gray-100">
         <div className="flex">
-          <SecondarySearchComp onSearch={handleSearch} />
+          <Collapsible label="Filtrera">
+            <SecondarySearchComp onSearch={handleSearch} />
+          </Collapsible>
           <CarouselDemo />
         </div>
         <div className="w-full mt-12">

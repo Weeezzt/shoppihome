@@ -1,29 +1,35 @@
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { MapPinIcon, PhoneIcon } from "lucide-react";
+import { Document } from "mongoose";
 
-interface Property {
-  id: string;
-  address: string;
-  city: string;
-  type: string;
-  rooms: number;
-  squareMeters: number;
-  price: number;
-  description: string;
-  images: string[];
-  status: string;
-  yearBuilt: number;
-  garden?: boolean;
-  parking?: boolean | string;
-  heating: string;
-  listingDate: string;
-  agent: string;
-  propertyTax: number;
-  distanceToCityCenter: number;
-  publicTransport: string;
-  neighborhood: string;
-  energyRating: string;
+type PropertyType = "Villa" | "Apartment" | "Townhouse" | "Condo" | "Cottage" | "Studio" | "Other";
+type PropertyStatus = "For Sale" | "Sold";
+
+interface Property extends Document {
+  listingId: string; // Unique identifier for the property
+  title: string; // Title of the listing
+  description: string; // Description of the property
+  address: string; // Full address of the property
+  city: string; // City where the property
+  price: number; // Price of the property
+  bid?: number; // Optional field for bids
+  soldPrice?: number; // Optional field for the sold price
+  area: number; // Area in square meters
+  numberOfRooms: number; // Number of rooms in the property
+  type: PropertyType; // Property type
+  realtorId: string; // ID of the realtor associated with the property
+  realEstateFirm: string; // Name of the real estate firm
+  status: PropertyStatus;
+  propertyFeatures: {
+    garden?: boolean; // Optional garden feature
+    parking?: boolean; // Optional parking feature
+    heating?: boolean; // Optional heating feature
+    [key: string]: any; // Additional features can be added dynamically
+  };
+  totalClicked: number; // Total clicks on the listing
+  yearBuilt: number; // Year the property was built
+  images: string[]; // Array of image URLs
 }
 
 interface IndividualListingProps {
@@ -37,7 +43,7 @@ const IndividualListing = ({ property }: IndividualListingProps) => {
         {/* Left Column */}
         <div className="flex-1">
           <img
-            src={`/${property.images[0]}`}
+            src={property.images[0]}
             alt={`Image of ${property.address}`}
             className="w-full h-80 object-cover rounded-lg"
           />
@@ -55,9 +61,7 @@ const IndividualListing = ({ property }: IndividualListingProps) => {
           <p className="text-xl text-gray-600">{property.city}</p>
           <div className="flex gap-4 mt-4">
             <Badge variant="outline">{property.status}</Badge>
-            <span className="text-gray-500">
-              Listed on {new Date(property.listingDate).toLocaleDateString()}
-            </span>
+            <span className="text-gray-500">Listed on (date)</span>
           </div>
           <p className="mt-4">{property.description}</p>
           <div className="flex gap-6 mt-6">
@@ -67,11 +71,11 @@ const IndividualListing = ({ property }: IndividualListingProps) => {
             </div>
             <div>
               <h2 className="font-semibold">Size</h2>
-              <p>{property.squareMeters} m²</p>
+              <p>{property.area} m²</p>
             </div>
             <div>
               <h2 className="font-semibold">Rooms</h2>
-              <p>{property.rooms}</p>
+              <p>{property.numberOfRooms}</p>
             </div>
           </div>
 
@@ -80,28 +84,21 @@ const IndividualListing = ({ property }: IndividualListingProps) => {
             <p>
               <strong>Year Built:</strong> {property.yearBuilt}
             </p>
-            {property.garden && (
+            {property.propertyFeatures.garden && (
               <p>
                 <strong>Garden:</strong> Yes
               </p>
             )}
-            {property.parking && (
+            {property.propertyFeatures.parking && (
               <p>
                 <strong>Parking:</strong>{" "}
-                {typeof property.parking === "string" ? property.parking : "Yes"}
+                {typeof property.propertyFeatures.parking === "string"
+                  ? property.propertyFeatures.parking
+                  : "Yes"}
               </p>
             )}
             <p>
-              <strong>Heating:</strong> {property.heating}
-            </p>
-            <p>
-              <strong>Public Transport:</strong> {property.publicTransport}
-            </p>
-            <p>
-              <strong>Neighborhood:</strong> {property.neighborhood}
-            </p>
-            <p>
-              <strong>Energy Rating:</strong> {property.energyRating}
+              <strong>Heating:</strong> {property.propertyFeatures.heating}
             </p>
           </div>
         </div>
@@ -117,7 +114,7 @@ const IndividualListing = ({ property }: IndividualListingProps) => {
                 className="w-16 h-16 rounded-full object-cover"
               />
               <div>
-                <p className="font-semibold">{property.agent}</p>
+                <p className="font-semibold">{property.realEstateFirm}</p>
                 <p className="text-gray-500">Real Estate Agency</p>
               </div>
             </div>

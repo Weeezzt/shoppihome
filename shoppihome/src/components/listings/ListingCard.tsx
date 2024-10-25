@@ -6,28 +6,35 @@ import { useNavigate } from "react-router-dom";
 
 // Rest of the code...
 
-interface Property {
-  id: string;
-  address: string;
-  city: string;
-  type: string;
-  rooms: number;
-  squareMeters: number;
-  price: number;
-  description: string;
-  images: string[];
-  status: string;
-  yearBuilt: number;
-  garden?: boolean;
-  parking?: boolean | string;
-  heating: string;
-  listingDate: string;
-  agent: string;
-  propertyTax: number;
-  distanceToCityCenter: number;
-  publicTransport: string;
-  neighborhood: string;
-  energyRating: string;
+import { Document } from "mongoose";
+
+type PropertyType = "Villa" | "Apartment" | "Townhouse" | "Condo" | "Cottage" | "Studio" | "Other";
+type PropertyStatus = "For Sale" | "Sold";
+
+interface Property extends Document {
+  listingId: string; // Unique identifier for the property
+  title: string; // Title of the listing
+  description: string; // Description of the property
+  address: string; // Full address of the property
+  city: string; // City where the property
+  price: number; // Price of the property
+  bid?: number; // Optional field for bids
+  soldPrice?: number; // Optional field for the sold price
+  area: number; // Area in square meters
+  numberOfRooms: number; // Number of rooms in the property
+  type: PropertyType; // Property type
+  realtorId: string; // ID of the realtor associated with the property
+  realEstateFirm: string; // Name of the real estate firm
+  status: PropertyStatus;
+  propertyFeatures: {
+    garden?: boolean; // Optional garden feature
+    parking?: boolean; // Optional parking feature
+    heating?: boolean; // Optional heating feature
+    [key: string]: any; // Additional features can be added dynamically
+  };
+  totalClicked: number; // Total clicks on the listing
+  yearBuilt: number; // Year the property was built
+  images: string[]; // Array of image URLs
 }
 
 interface ListingCardProps {
@@ -37,7 +44,7 @@ interface ListingCardProps {
 const ListingCard = ({ property }: ListingCardProps) => {
   const navigate = useNavigate();
   const handleCardClick = () => {
-    navigate(`/homes/${property.id}`);
+    navigate(`/homes/${property.listingId}`);
   };
 
   return (
@@ -51,7 +58,7 @@ const ListingCard = ({ property }: ListingCardProps) => {
           <div className="text-right">
             <Button variant="ghost" size="sm" className="p-1">
               <CalendarIcon className="w-4 h-4 mr-1" />
-              Listed on {new Date(property.listingDate).toLocaleDateString()}
+              Listed on (date)
             </Button>
           </div>
         </div>
@@ -65,10 +72,10 @@ const ListingCard = ({ property }: ListingCardProps) => {
         <div className="flex mt-4 space-x-4">
           <div className="flex flex-col">
             <span className="font-semibold text-lg">{property.price.toLocaleString()} kr</span>
-            <span className="text-gray-500">{property.squareMeters} m²</span>
+            <span className="text-gray-500">{property.area} m²</span>
           </div>
           <div className="flex flex-col">
-            <span className="font-semibold">{property.rooms} rum</span>
+            <span className="font-semibold">{property.numberOfRooms} rum</span>
             <span className="text-gray-500">{property.type}</span>
           </div>
         </div>
