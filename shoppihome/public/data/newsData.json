@@ -1,0 +1,50 @@
+[
+  {
+    "id": "1",
+    "title": "Housing Market Cools Down in Major Cities",
+    "description": "Recent data shows a significant cooling in house prices across major cities, with buyers hesitant due to rising mortgage rates.",
+    "imageUrl": "apart.png",
+    "date": "2024-10-01",
+    "author": "Jane Doe"
+  },
+  {
+    "id": "2",
+    "title": "New Government Policies Aim to Increase Housing Supply",
+    "description": "In a bid to tackle the housing crisis, the government has introduced new policies to encourage the construction of affordable housing.",
+    "imageUrl": "texas.png",
+    "date": "2024-09-28",
+    "author": "John Smith"
+  },
+  {
+    "id": "3",
+    "title": "Top Trends in Luxury Real Estate for 2024",
+    "description": "Luxury real estate is booming in coastal areas, with trends leaning towards sustainable designs and advanced home tech.",
+    "imageUrl": "stuga.png",
+    "date": "2024-10-05",
+    "author": "Alice Johnson"
+  },
+  {
+    "id": "4",
+    "title": "Experts Warn of Potential Bubble in Suburban Housing Market",
+    "description": "With suburban house prices soaring, some experts warn of a possible bubble forming due to increased demand.",
+    "imageUrl": "lagga.png",
+    "date": "2024-09-20",
+    "author": "Bob Brown"
+  },
+  {
+    "id": "5",
+    "title": "Housing Affordability Drops to New Lows in Rural Areas",
+    "description": "A new report highlights the challenges faced by potential homebuyers in rural areas where prices continue to rise.",
+    "imageUrl": "home1.png",
+    "date": "2024-10-08",
+    "author": "Susan Green"
+  },
+  {
+    "id": "6",
+    "title": "How Climate Change is Impacting Property Values",
+    "description": "Studies reveal that climate risks are becoming a significant factor in determining property values, especially in coastal regions.",
+    "imageUrl": "apart.png",
+    "date": "2024-09-30",
+    "author": "Tom White"
+  }
+]
