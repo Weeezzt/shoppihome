@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import IndividualListing from "@/components/listings/IndividualListing";
 import Header from "@/components/Header";
 import { Document } from "mongoose";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import LoadingSpinner from "@/components/placeHolders/Loading";
 
 type PropertyType = "Villa" | "Apartment" | "Townhouse" | "Condo" | "Cottage" | "Studio" | "Other";
 type PropertyStatus = "For Sale" | "Sold";
@@ -34,23 +37,25 @@ interface Property extends Document {
 }
 const IndividualPropertyPage = () => {
   const { id } = useParams<{ id: string }>();
-  const [property, setProperty] = useState<Property | null>(null);
   console.log(id);
-  useEffect(() => {
-    const fetchProperty = async () => {
-      try {
-        const response = await fetch(`http://localhost:8000/api/listings/${id}`);
-        const data: Property = await response.json();
-        setProperty(data);
-      } catch (error) {
-        console.error("Error fetching property data:", error);
-      }
-    };
-    fetchProperty();
-  }, [id]);
 
-  if (!property) {
-    return <div>Property not found</div>;
+  const {
+    data: property,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryFn: async () => {
+      const response = await axios.get(`http://localhost:8000/api/listings/${id}`);
+      return response.data;
+    },
+    queryKey: ["listing"],
+  });
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+  if (isError) {
+    return <div>Error fetching property</div>;
   }
 
   return (

@@ -2,6 +2,8 @@ import ListingCard from "./ListingCard";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Document } from "mongoose";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 type PropertyType = "Villa" | "Apartment" | "Townhouse" | "Condo" | "Cottage" | "Studio" | "Other";
 type PropertyStatus = "For Sale" | "Sold";
@@ -43,34 +45,24 @@ interface ListingsProps {
 }
 
 const Listings: React.FC<ListingsProps> = ({ filters }) => {
-  const [properties, setProperties] = useState<Property[]>([]);
   const [filteredProperties, setFilteredProperties] = useState<Property[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProperties = async () => {
-      try {
-        const response = await fetch("http://localhost:8000/api/listings");
-        const data: Property[] = await response.json();
-
-        if (Array.isArray(data)) {
-          setProperties(data);
-        } else {
-          console.error("Fetched data is not an array:", data);
-        }
-      } catch (error) {
-        console.error("Error fetching properties data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProperties();
-  }, []);
+  const {
+    data: properties,
+    error,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryFn: async () => {
+      const response = await axios.get("http://localhost:8000/api/listings");
+      return response.data;
+    },
+    queryKey: ["listings"],
+  });
 
   // Apply filters
   useEffect(() => {
-    const filtered = properties.filter((property) => {
+    if (!properties) return;
+    const filtered = properties.filter((property: Property) => {
       const matchesSearchTerm =
         property.address.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
         property.city.toLowerCase().includes(filters.searchTerm.toLowerCase());
@@ -86,6 +78,8 @@ const Listings: React.FC<ListingsProps> = ({ filters }) => {
 
     setFilteredProperties(filtered);
   }, [filters, properties]);
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error: {error?.message}</p>;
 
   return (
     <div className="flex flex-col space-y-6 w-full ml-24">

@@ -1,35 +1,39 @@
 "use client";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useAuth } from "@/context/useAuth";
+import { useForm } from "react-hook-form";
 
-export default function LoginComp() {
-  const [error, setError] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const isValidEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+type Props = {};
+type LoginFormsInputs = {
+  userName: string;
+  password: string;
+};
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+const validation = yup.object().shape({
+  userName: yup.string().required(),
+  password: yup.string().min(6).required(),
+});
 
-    if (!isValidEmail(email)) {
-      setError("Invalid email");
-      return;
-    }
-    if (!password || password.length < 8) {
-      setError("Password must be at least 8 characters");
-      return;
-    }
+export default function LoginComp(props: Props) {
+  const { loginUser } = useAuth();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormsInputs>({ resolver: yupResolver(validation) });
+
+  const handleLogin = (form: LoginFormsInputs) => {
+    loginUser(form.userName, form.password);
   };
 
   return (
     <div className="w-full flex items-center justify-center lg:grid min-h-full lg:grid-cols-2 ">
       <div className="flex items-center justify-center py-12">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(handleLogin)}>
           <div className="mx-auto grid w-[350px] gap-6">
             <div className="grid gap-2 text-center">
               <h1 className="text-3xl font-bold text-black">Logga in</h1>
@@ -43,10 +47,10 @@ export default function LoginComp() {
                 <Input
                   id="email"
                   placeholder="m@example.com"
-                  required
                   className="bg-transparent border-gray-600"
-                  onChange={(e) => setEmail(e.target.value)}
+                  {...register("userName")}
                 />
+                {errors.userName ? <p className="text-red-700">{errors.userName.message}</p> : ""}
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
@@ -57,13 +61,11 @@ export default function LoginComp() {
                 </div>
                 <Input
                   id="password"
-                  type="password"
-                  required
                   className="bg-transparent border-gray-600 "
-                  onChange={(e) => setPassword(e.target.value)}
+                  {...register("password")}
                 />
+                {errors.password ? <p className="text-red-700">{errors.password.message}</p> : ""}
               </div>
-              {error && <p className="text-red-500 text-sm">{error}</p>}
               <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-black">
                 Logga in
               </Button>

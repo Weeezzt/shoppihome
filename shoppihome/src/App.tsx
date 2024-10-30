@@ -1,24 +1,23 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from "./pages/home";
-import Homes from "./pages/homes";
-import News from "./pages/news";
-import Login from "./pages/auth/login/Login";
-import SignUp from "./pages/auth/signup/Signup";
-import IndividualPage from "./pages/homes/id/IndividualPage";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter as Router } from "react-router-dom";
+import AppRoutes from "./routes/routes";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+import { User } from "lucide-react";
+import { UserProvider } from "./context/useAuth";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/home" element={<Home />} />
-        <Route path="/homes" element={<Homes />} />
-        <Route path="/homes/:id" element={<IndividualPage />} />
-        <Route path="/news" element={<News />} />
-        <Route path="/auth/signup" element={<SignUp />} />
-        <Route path="/auth/login" element={<Login />} />
-      </Routes>
-    </Router>
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <UserProvider>
+          <AppRoutes />
+        </UserProvider>
+      </Router>
+      <ToastContainer />
+    </QueryClientProvider>
   );
 }
 
