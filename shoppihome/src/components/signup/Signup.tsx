@@ -4,29 +4,32 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useAuth } from "@/context/useAuth";
+import { useForm } from "react-hook-form";
 
+type RegisterFormsInputs = {
+  email: string;
+  userName: string;
+  password: string;
+};
+
+const validation = Yup.object().shape({
+  email: Yup.string().required("Email is required"),
+  userName: Yup.string().required("Username is required"),
+  password: Yup.string().required("Password is required"),
+});
 export default function SignUp(): JSX.Element {
-  const [error, setError] = useState("");
-  const [company, setCompany] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { registerUser } = useAuth();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormsInputs>({ resolver: yupResolver(validation) });
 
-  const isValidEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-
-    if (!isValidEmail(email)) {
-      setError("Invalid email");
-      return;
-    }
-    if (!password || password.length < 6) {
-      setError("Password must be at least 6 characters");
-      return;
-    }
+  const handleLogin = (form: RegisterFormsInputs) => {
+    registerUser(form.userName, form.email, form.password);
   };
 
   return (
@@ -36,20 +39,8 @@ export default function SignUp(): JSX.Element {
         <CardDescription>Skriv in din information för att skapa ett konto</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(handleLogin)}>
           <div className="grid gap-4">
-            <div className="grid gap-2">
-              <div className="grid gap-2">
-                <Label htmlFor="first-name">Namn</Label>
-                <Input
-                  className="bg-transparent"
-                  id="first-name"
-                  placeholder="Handyplanit"
-                  required
-                  onChange={(e) => setCompany(e.target.value)}
-                />
-              </div>
-            </div>
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -57,9 +48,21 @@ export default function SignUp(): JSX.Element {
                 id="email"
                 type="email"
                 placeholder="m@example.se"
-                required
-                onChange={(e) => setEmail(e.target.value)}
+                {...register("email")}
               />
+              {errors.email ? <p className="text-white">{errors.email.message}</p> : ""}
+            </div>
+            <div className="grid gap-2">
+              <div className="grid gap-2">
+                <Label htmlFor="userName">Namn</Label>
+                <Input
+                  className="bg-transparent"
+                  id="userName"
+                  placeholder="Användarnamn"
+                  {...register("userName")}
+                />
+                {errors.userName ? <p className="text-white">{errors.userName.message}</p> : ""}
+              </div>
             </div>
             <div className="grid gap-2">
               <Label className="" htmlFor="password">
@@ -69,10 +72,11 @@ export default function SignUp(): JSX.Element {
                 className="bg-transparent"
                 id="password"
                 type="password"
-                onChange={(e) => setPassword(e.target.value)}
+                {...register("password")}
               />
+              {errors.password ? <p className="text-white">{errors.password.message}</p> : ""}
             </div>
-            {error && <p className="text-red-500">{error}</p>}
+
             <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white">
               Skapa ett konto
             </Button>

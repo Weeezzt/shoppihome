@@ -24,5 +24,10 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "server.js"]
+  "include": [
+    "src",
+    "server.js",
+    "backend/src/models/listingSchema.ts",
+    "backend/src/routes/listingsRouter.ts"
+  ]
 }

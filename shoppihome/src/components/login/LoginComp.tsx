@@ -43,10 +43,10 @@ export default function LoginComp(props: Props) {
             </div>
             <div className="grid gap-4 text-black">
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="username">Användarnamn</Label>
                 <Input
-                  id="email"
-                  placeholder="m@example.com"
+                  id="username"
+                  placeholder="användarnamn"
                   className="bg-transparent border-gray-600"
                   {...register("userName")}
                 />

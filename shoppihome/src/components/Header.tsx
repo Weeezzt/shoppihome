@@ -1,6 +1,8 @@
 import React from "react";
+import { useAuth } from "@/context/useAuth";
 
 const Header: React.FC = () => {
+  const { isLoggedIn, logoutUser } = useAuth();
   return (
     <header className="bg-white shadow-md">
       <nav className="container mx-auto px-4 py-4 flex justify-between items-center h-full">
@@ -35,17 +37,28 @@ const Header: React.FC = () => {
           </li>
         </ul>
         <div className="flex space-x-4">
-          {/* Action buttons */}
-          <a href="/auth/login">
-            <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-              Login
+          {/* Conditional rendering of buttons */}
+          {!isLoggedIn ? (
+            <>
+              <a href="/auth/login">
+                <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                  Login
+                </button>
+              </a>
+              <a href="/auth/signup">
+                <button className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200">
+                  Sign Up
+                </button>
+              </a>
+            </>
+          ) : (
+            <button
+              onClick={logoutUser}
+              className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+            >
+              Log Out
             </button>
-          </a>
-          <a href="/auth/signup">
-            <button className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200">
-              Sign Up
-            </button>
-          </a>
+          )}
         </div>
         <button className="md:hidden text-gray-700 focus:outline-none">
           {/* Hamburger icon for mobile */}

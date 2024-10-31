@@ -3,7 +3,8 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import Router from "./src/routes/listingsRouter";
+import listingsRouter from "../src/routes/listingsRouter";
+import authRouter from "./routes/auth";
 
 dotenv.config();
 
@@ -27,7 +28,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(cookieParser());
-app.use("/api", Router);
+app.use("/api", listingsRouter);
+app.use("/api", authRouter);
 app.get("/", (req, res) => {
   res.status(200).send("Hello, world!");
 });

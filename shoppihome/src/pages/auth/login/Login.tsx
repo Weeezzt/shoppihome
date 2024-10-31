@@ -1,6 +1,19 @@
 import LoginComp from "@/components/login/LoginComp";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/useAuth";
 import Header from "@/components/Header";
+
 export default function Login() {
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Redirect if user is already logged in
+    if (isLoggedIn) {
+      navigate("/home"); // or wherever you want to redirect
+    }
+  }, [isLoggedIn, navigate]);
   return (
     <div className="flex flex-col max-h-screen">
       <Header />

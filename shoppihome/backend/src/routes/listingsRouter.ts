@@ -1,9 +1,9 @@
 import express from "express";
-const Router = express.Router();
-import { PropertyModel } from "@/models/listingSchema";
+const listingsRouter = express.Router();
+import { PropertyModel } from "../models/listingSchema";
 
 //GET ALL
-Router.get("/listings", async (req, res) => {
+listingsRouter.get("/listings", async (req, res) => {
   try {
     const data = await PropertyModel.find({});
     const parsedData = JSON.parse(JSON.stringify(data));
@@ -16,7 +16,7 @@ Router.get("/listings", async (req, res) => {
 });
 
 //GET ONE
-Router.get("/listings/:id", async (req, res) => {
+listingsRouter.get("/listings/:id", async (req, res) => {
   try {
     const data = await PropertyModel.findOne({ listingId: req.params.id });
     console.log("fetching property with id:", req.params.id);
@@ -27,7 +27,7 @@ Router.get("/listings/:id", async (req, res) => {
   }
 });
 
-Router.post("/listings", async (req, res) => {
+listingsRouter.post("/listings", async (req, res) => {
   try {
     const data = await PropertyModel.create(req.body);
     console.log(data);
@@ -37,4 +37,4 @@ Router.post("/listings", async (req, res) => {
   }
 });
 
-export default Router;
+export default listingsRouter;
