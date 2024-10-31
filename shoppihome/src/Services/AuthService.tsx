@@ -15,12 +15,18 @@ export const loginAPI = async (username: string, password: string) => {
   }
 };
 
-export const registerAPI = async (username: string, email: string, password: string) => {
+export const registerAPI = async (
+  username: string,
+  email: string,
+  password: string,
+  role: string
+) => {
   try {
     const data = await axios.post<UserProfileToken>(api + "/auth/register", {
       username: username,
       email: email,
       password: password,
+      role: role,
     });
     return data;
   } catch (error) {

@@ -9,16 +9,26 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuth } from "@/context/useAuth";
 import { useForm } from "react-hook-form";
 
+enum Role {
+  general = "general",
+  admin = "admin",
+  agent = "agent",
+}
+
 type RegisterFormsInputs = {
   email: string;
   userName: string;
   password: string;
+  role: Role;
 };
 
 const validation = Yup.object().shape({
   email: Yup.string().required("Email is required"),
   userName: Yup.string().required("Username is required"),
   password: Yup.string().required("Password is required"),
+  role: Yup.mixed<Role>()
+    .oneOf([Role.admin, Role.agent, Role.general])
+    .required("Role is required"),
 });
 export default function SignUp(): JSX.Element {
   const { registerUser } = useAuth();
@@ -29,7 +39,7 @@ export default function SignUp(): JSX.Element {
   } = useForm<RegisterFormsInputs>({ resolver: yupResolver(validation) });
 
   const handleLogin = (form: RegisterFormsInputs) => {
-    registerUser(form.userName, form.email, form.password);
+    registerUser(form.userName, form.email, form.password, form.role);
   };
 
   return (
@@ -75,6 +85,20 @@ export default function SignUp(): JSX.Element {
                 {...register("password")}
               />
               {errors.password ? <p className="text-white">{errors.password.message}</p> : ""}
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="role">Roll</Label>
+              <select
+                className="bg-transparent border border-gray-300 rounded-md p-2"
+                id="role"
+                {...register("role")}
+              >
+                <option value="">Välj roll</option>
+                <option value="agent">Mäklare</option>
+                <option value="admin">Admin</option>
+                <option value="general">Användare</option>
+              </select>
+              {errors.role && <p className="text-red-500">{errors.role.message}</p>}
             </div>
 
             <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white">

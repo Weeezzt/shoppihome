@@ -1,4 +1,4 @@
-import { UserProfile } from "@/models/User";
+import { UserProfile, Role } from "@/models/User";
 import React, { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginAPI, registerAPI } from "@/Services/AuthService";
@@ -8,7 +8,7 @@ import axios from "axios";
 type UserContextType = {
   user: UserProfile | null;
   token: string | null;
-  registerUser: (username: string, email: string, password: string) => void;
+  registerUser: (username: string, email: string, password: string, role: Role) => void;
   loginUser: (username: string, password: string) => void;
   logoutUser: () => void;
   isLoggedIn: boolean;
@@ -35,14 +35,16 @@ export const UserProvider = ({ children }: Props) => {
     setIsReady(true);
   }, []);
 
-  const register = async (username: string, email: string, password: string) => {
-    await registerAPI(username, email, password)
+  const registerUser = async (username: string, email: string, password: string, role: Role) => {
+    await registerAPI(username, email, password, role)
       .then((res) => {
         if (res) {
           localStorage.setItem("token", res?.data.token);
           const userObj = {
             userName: res?.data.userName,
             email: res?.data.email,
+            role: res?.data.role,
+            savedListings: [],
           };
           localStorage.setItem("user", JSON.stringify(userObj));
           setToken(res?.data.token!);
@@ -63,6 +65,8 @@ export const UserProvider = ({ children }: Props) => {
           const userObj = {
             userName: res?.data.userName,
             email: res?.data.email,
+            role: res?.data.role,
+            savedListings: [],
           };
           localStorage.setItem("user", JSON.stringify(userObj));
           setToken(res?.data.token!);
@@ -91,7 +95,7 @@ export const UserProvider = ({ children }: Props) => {
       value={{
         user,
         token,
-        registerUser: register,
+        registerUser,
         loginUser,
         logoutUser,
         isLoggedIn: isLoggedIn(),

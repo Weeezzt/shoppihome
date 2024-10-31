@@ -61,6 +61,7 @@ export default function LoginComp(props: Props) {
                 </div>
                 <Input
                   id="password"
+                  type="password"
                   className="bg-transparent border-gray-600 "
                   {...register("password")}
                 />

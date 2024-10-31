@@ -9,7 +9,7 @@ const JWT_SECRET = "your_jwt_secret"; // Store this in environment variables for
 
 // Register Route
 authRouter.post("/auth/register", async (req: Request, res: Response): Promise<any> => {
-  const { username, email, password } = req.body;
+  const { username, email, password, role } = req.body;
 
   try {
     // Check if user already exists
@@ -22,7 +22,7 @@ authRouter.post("/auth/register", async (req: Request, res: Response): Promise<a
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create and save user
-    const newUser = new UserModel({ username, email, password: hashedPassword });
+    const newUser = new UserModel({ username, email, password: hashedPassword, role });
     await newUser.save();
 
     res.status(201).json({ message: "User registered successfully" });
