@@ -8,7 +8,7 @@ interface CardDemoProps {
 
 export default function CardDemo({ src, alt, title }: CardDemoProps) {
   return (
-    <Card className="w-[300px] h-[220px] hover:cursor-pointer rounded-sm hover:shadow-md">
+    <Card className="w-11/12 md:w-9/12 lg:w-full mx-auto hover:cursor-pointer rounded-sm hover:shadow-md">
       <CardHeader className="p-4">
         <CardTitle>{title}</CardTitle>
       </CardHeader>

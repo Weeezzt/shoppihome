@@ -28,7 +28,7 @@ const UserSchema = new mongoose.Schema<IUser>({
     type: Date,
     default: Date.now,
   },
-  savedListings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Property" }],
+  savedListings: { type: [String], default: [] },
 });
 
 export const UserModel = mongoose.model<IUser>("User", UserSchema);

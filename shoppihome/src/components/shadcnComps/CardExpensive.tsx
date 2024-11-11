@@ -8,7 +8,7 @@ interface CardDemoProps {
 
 export default function CardExpensive({ src, alt, title }: CardDemoProps) {
   return (
-    <Card className="rounded-sm hover:cursor-pointer hover:shadow-md hover:border-blue-500 w-52 h-32">
+    <Card className="rounded-sm hover:cursor-pointer mx-auto hover:shadow-md hover:border-blue-500 max-h-[250px] lg:w-52 lg:h-32">
       <CardHeader className="p-4">
         <CardTitle>{title}</CardTitle>
       </CardHeader>

@@ -48,7 +48,7 @@ export function CarouselDemo() {
           delay: 3000,
         }),
       ]}
-      className="mx-auto max-w-md"
+      className="mx-auto max-w-sm md:max-w-md"
     >
       <CarouselContent>
         {Array.from({ length: 5 }).map((_, index) => (

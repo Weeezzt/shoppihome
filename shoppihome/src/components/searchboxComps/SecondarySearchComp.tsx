@@ -29,7 +29,7 @@ const SecondarySearchComp: React.FC<SecondarySearchCompProps> = ({ onSearch }) =
   };
 
   return (
-    <div className="p-6 max-w-3xl ml-24 bg-white shadow-md rounded-md">
+    <div className="p-6 mx-auto md:max-w-lg lg:max-w-3xl lg:ml-24 bg-white shadow-md rounded-md">
       <div className="mb-4">
         <SearchBox searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </div>

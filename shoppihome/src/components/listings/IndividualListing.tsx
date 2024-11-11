@@ -1,7 +1,12 @@
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { MapPinIcon, PhoneIcon } from "lucide-react";
+import { MapPinIcon, PhoneIcon, HeartIcon } from "lucide-react";
 import { Document } from "mongoose";
+import { useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { fetchUsername } from "@/Services/userService";
+import { useAuth } from "@/context/useAuth";
+import { addToFavorites } from "@/Services/ListingService";
 
 type PropertyType = "Villa" | "Apartment" | "Townhouse" | "Condo" | "Cottage" | "Studio" | "Other";
 type PropertyStatus = "For Sale" | "Sold";
@@ -37,6 +42,34 @@ interface IndividualListingProps {
 }
 
 const IndividualListing = ({ property }: IndividualListingProps) => {
+  const { isLoggedIn } = useAuth();
+  const { data: userData } = useQuery<{ username: string }, AxiosError>({
+    queryKey: ["username"],
+    queryFn: async () => {
+      const data = await fetchUsername();
+      if (!data) {
+        throw new Error("No username found");
+      }
+      return data;
+    },
+    enabled: isLoggedIn,
+  });
+
+  const handleSaveListing = async () => {
+    console.log("User data:", userData);
+    if (userData) {
+      try {
+        console.log("Saving listing for user:", userData.username);
+        const response = await addToFavorites(userData.username, property.listingId);
+        console.log("Added to favorites:", response);
+      } catch (error) {
+        console.error("Error saving listing:", error);
+      }
+    } else {
+      console.log("User is not logged in");
+    }
+  };
+
   return (
     <div className="max-w-5xl mx-auto p-6">
       <div className="flex flex-col lg:flex-row gap-6">
@@ -128,7 +161,15 @@ const IndividualListing = ({ property }: IndividualListingProps) => {
           </div>
 
           <div className="mt-6">
-            <Button variant="secondary" className="w-full flex items-center justify-center">
+            <Button
+              variant="outline"
+              className="w-full flex items-center justify-center mb-4"
+              onClick={handleSaveListing}
+            >
+              <HeartIcon className="w-5 h-5 mr-2" />
+              Save to Favorites
+            </Button>
+            <Button variant="outline" className="w-full flex items-center justify-center">
               <MapPinIcon className="w-5 h-5 mr-2" />
               View on Map
             </Button>

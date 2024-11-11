@@ -29,7 +29,7 @@ const MainSearchComp: React.FC<MainSearchCompProps> = ({ onSearch }) => {
     onSearch({ searchTerm, minRooms, minArea, maxPrice, propertyType });
   };
   return (
-    <div className="p-6 max-w-3xl bg-white shadow-md rounded-md mx-auto">
+    <div className="p-4 mb-4 mx-auto w-11/12 md:w-9/12 lg:mx-14 lg:p-6 lg:max-w-3xl bg-white shadow-md rounded-md ">
       <div className="mb-4">
         <SearchBox searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </div>

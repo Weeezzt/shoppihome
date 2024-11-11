@@ -3,42 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CalendarIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
-// Rest of the code...
-
-import { Document } from "mongoose";
-
-type PropertyType = "Villa" | "Apartment" | "Townhouse" | "Condo" | "Cottage" | "Studio" | "Other";
-type PropertyStatus = "For Sale" | "Sold";
-
-interface Property extends Document {
-  listingId: string; // Unique identifier for the property
-  title: string; // Title of the listing
-  description: string; // Description of the property
-  address: string; // Full address of the property
-  city: string; // City where the property
-  price: number; // Price of the property
-  bid?: number; // Optional field for bids
-  soldPrice?: number; // Optional field for the sold price
-  area: number; // Area in square meters
-  numberOfRooms: number; // Number of rooms in the property
-  type: PropertyType; // Property type
-  realtorId: string; // ID of the realtor associated with the property
-  realEstateFirm: string; // Name of the real estate firm
-  status: PropertyStatus;
-  propertyFeatures: {
-    garden?: boolean; // Optional garden feature
-    parking?: boolean; // Optional parking feature
-    heating?: boolean; // Optional heating feature
-    [key: string]: any; // Additional features can be added dynamically
-  };
-  totalClicked: number; // Total clicks on the listing
-  yearBuilt: number; // Year the property was built
-  images: string[]; // Array of image URLs
-}
+import { Listing } from "@/models/Listing";
 
 interface ListingCardProps {
-  property: Property;
+  property: Listing;
 }
 
 const ListingCard = ({ property }: ListingCardProps) => {
@@ -48,7 +16,10 @@ const ListingCard = ({ property }: ListingCardProps) => {
   };
 
   return (
-    <Card onClick={handleCardClick} className="w-full max-w-5xl shadow-lg p-4 hover:cursor-pointer">
+    <Card
+      onClick={handleCardClick}
+      className=" w-11/12 lg:max-w-4xl xl:max-w-5xl shadow-lg p-4 mx-auto lg:mx-0 hover:cursor-pointer"
+    >
       <CardHeader className="p-2">
         <div className="flex justify-between">
           <div>
@@ -87,7 +58,7 @@ const ListingCard = ({ property }: ListingCardProps) => {
       </CardContent>
       <CardFooter className="flex justify-between p-2">
         <Badge variant="outline">{property.status}</Badge>
-        <Button variant="outline">Visa mer</Button>
+        <Button variant="outline">Spara</Button>
       </CardFooter>
     </Card>
   );

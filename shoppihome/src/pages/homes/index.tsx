@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
+import { useMediaQuery } from "react-responsive";
 import SecondarySearchComp from "@/components/searchboxComps/SecondarySearchComp";
 import Header from "@/components/Header";
 import { CarouselDemo } from "@/components/shadcnComps/CarouselDemo";
@@ -17,6 +18,7 @@ interface SearchFilters {
 }
 
 export default function page() {
+  const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
   const location = useLocation();
   const initialFilters = location.state?.filters || {
     searchTerm: "",
@@ -37,11 +39,20 @@ export default function page() {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow p-6 bg-gray-100">
-        <div className="flex">
-          <Collapsible label="Filtrera">
-            <SecondarySearchComp onSearch={handleSearch} />
-          </Collapsible>
-          <CarouselDemo />
+        <div className="flex flex-col space-y-6 lg:flex-row">
+          {isMobile ? (
+            <>
+              <CarouselDemo />
+              <SecondarySearchComp onSearch={handleSearch} />
+            </>
+          ) : (
+            <>
+              <Collapsible label="Filtrera">
+                <SecondarySearchComp onSearch={handleSearch} />
+              </Collapsible>
+              <CarouselDemo />
+            </>
+          )}
         </div>
         <div className="w-full mt-12">
           <Listings filters={filters} />
